@@ -44,5 +44,25 @@ pnpm build
 - 简陋个人中心
 - 404
 - SEO
+- 国际化
 - [暗黑模式]
-- [多语言]
+
+# 使用
+
+## SvgIcon组件
+
+功能：使用自定义svg文件
+
+svg文件目录: `@/assets/icons/`
+
+引入：
+```js
+import SvgIcon from "@/components/Icons/SvgIcon.vue";
+```
+
+使用`<SvgIcon name="svg文件名" style=""></SvgIcon>`； 示例：
+```js
+<el-icon style="width: 1.5rem; height: 1.5rem; color: red;">
+  <SvgIcon name="zh_en"></SvgIcon>
+</el-icon>
+```

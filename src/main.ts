@@ -16,7 +16,8 @@ import 'element-plus/dist/index.css'
 import pinia from './store'
 //default-passive-events
 import 'default-passive-events'
-
+//i18n
+import i18n from './language'
 
 const app = createApp(App)
 //安装仓库
@@ -25,4 +26,5 @@ app.use(router)
 app.use(ElementPlus, {
   locale: zhCn
 })
+app.use(i18n)
 app.mount('#app')
