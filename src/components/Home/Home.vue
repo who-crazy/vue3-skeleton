@@ -12,9 +12,13 @@ const search = () => {
     window.open('https://www.baidu.com/s?wd=' + keyword.value, '_blank')
   }
 }
-const setEngine = () => {
-  
+
+const setDialog = ref(true)
+const setEngineShow = () => {
+  setDialog.value = !setDialog.value
 }
+
+const activeName = ref('first')
 
 onMounted(() => {
 
@@ -37,7 +41,7 @@ onMounted(() => {
       <!-- seatch box -->
       <div class="flex flex-col mt-10 items-center">
         <div class="search-input pl-3">
-          <SvgIcon name="baidu" style="width: 25px; height: 25px;"></SvgIcon>
+          <SvgIcon name="baidu" style="width: 25px; height: 25px;" @click="setEngineShow"></SvgIcon>
           <input type="text" class="outline-none h-12 bg-[rgba(255,255,255,0)] w-[85%] ml-3 mr-3" v-model="keyword">
           <!-- <el-icon size="large"><Search /></el-icon> -->
           <Search class="w-6 h-6 cursor-pointer" @click="search"/>
@@ -56,11 +60,33 @@ onMounted(() => {
     </div>
     <!-- floor -->
     <Floor/>
+
+    <!-- set dialog -->
+    <el-dialog v-model="setDialog" title="设置"  class="set-engine-show-dialog">
+      <template #footer>
+        <el-tabs
+          v-model="activeName"
+          type="card"
+          class="demo-tabs"
+          @tab-click="handleClick"
+        >
+          <!-- <el-tab-pane label="风格" name="first">风格</el-tab-pane> -->
+          <el-tab-pane label="搜索引擎" name="first"></el-tab-pane>
+          <!-- <el-tab-pane label="分类管理" name="second"></el-tab-pane> -->
+          <el-tab-pane label="全局设置" name="third">全局设置</el-tab-pane>
+          <el-tab-pane label="关于" name="fourth">关于</el-tab-pane>
+        </el-tabs>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
 <style scoped>
 .search-input{
   @apply w-[600px] rounded-md flex items-center border-[1px] border-[#dfe1e5] shadow-[0_0_5px_rgba(32,33,36,.28)] border-transparent bg-white
+}
+:deep(.set-engine-show-dialog){
+  @apply w-[800px] rounded-md h-[500px]
 }
 </style>
