@@ -3,25 +3,34 @@ import { onMounted, ref} from 'vue';
 import { Search } from '@element-plus/icons-vue'
 import Header from '@/components/Layout/Header/Header.vue'
 import Floor from '@/components/Layout/Floor/Floor.vue'
-import SvgIcon from "@/components/Icons/SvgIcon.vue";
+// import SvgIcon from "@/components/Icons/SvgIcon.vue";
+// import Setting from "@/components/Setting/Setting.vue";
+import { useSearchStore } from '@/store/modules/search'
+
+const searchStore = useSearchStore()
 
 const keyword = ref('')
+//search
 const search = () => {
   if (keyword.value.length > 0) {
-    //badiu
-    window.open('https://www.baidu.com/s?wd=' + keyword.value, '_blank')
+    let searchLink = searchStore.defaultEngine.link.replace('{%s}', keyword.value);
+    window.open(searchLink, '_blank')
   }
 }
 
-const setDialog = ref(true)
-const setEngineShow = () => {
-  setDialog.value = !setDialog.value
+// const setDialog = ref(false)
+// const setEngineShow = () => {
+//   setDialog.value = !setDialog.value
+// }
+
+const activeName = ref('搜索')
+const clickEngine = (item:any) => {
+  searchStore.defaultEngine.logo =  item.logo
+  searchStore.defaultEngine.title =  item.title
+  searchStore.defaultEngine.link =  item.link
 }
-
-const activeName = ref('first')
-
 onMounted(() => {
-
+  searchStore.searchEngineList()
 })
 </script>
 
@@ -41,16 +50,31 @@ onMounted(() => {
       <!-- seatch box -->
       <div class="flex flex-col mt-10 items-center">
         <div class="search-input pl-3">
-          <SvgIcon name="baidu" style="width: 25px; height: 25px;" @click="setEngineShow"></SvgIcon>
-          <input type="text" class="outline-none h-12 bg-[rgba(255,255,255,0)] w-[85%] ml-3 mr-3" v-model="keyword">
+          <el-popover placement="bottom-start" width="600" popper-class="search-engine-choose mt-2 ml-[-12px]" trigger="click" :show-arrow="false" :hide-after="0">
+            <el-tabs v-model="activeName" class="demo-tabs">
+                <el-tab-pane :label="item.title" :name="item.title" v-for="(item, index) in searchStore.list" :key='index'>
+                  <div class="grid grid-cols-4 grid-auto-rows w-full ">
+                    <div class="pt-1 pb-1 pl-0 pr-2 hover:cursor-pointer rounded-sm"  v-for="(_item, _index) in item.list" :key="_index" @click="clickEngine(_item)">
+                      <div class="flex w-full items-center">
+                        <el-image  :src="_item.logo" fit="cover" class="w-4 h-4 mr-1"/>
+                        <el-text class="w-20 truncate">{{ _item.title }}</el-text>
+                      </div>
+                    </div>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+              <!-- <el-button type="primary" class='mt-3 w-full' @click="setEngineShow">自定义</el-button> -->
+
+            <template #reference>
+                <!-- <SvgIcon name="baidu" style="width: 25px; height: 25px; cursor: pointer;"></SvgIcon> -->
+                <el-image :src="searchStore.defaultEngine.logo" style="width: 25px; height: 25px; cursor: pointer;"></el-image>
+            </template>
+          </el-popover>
+          
+          <input type="text" class="outline-none h-12 bg-[rgba(255,255,255,0)] w-[85%] ml-3 mr-3" v-model="keyword" @keyup.enter="search">
           <!-- <el-icon size="large"><Search /></el-icon> -->
           <Search class="w-6 h-6 cursor-pointer" @click="search"/>
           <!-- <el-button type="primary" round size="">搜 索</el-button> -->
-        </div>
-        <div class="mt-3">
-          <el-tag>百度</el-tag>
-          <el-tag class="ml-3">搜狗</el-tag>
-          <el-button class="ml-3" type="primary">{{ $t(`setting`) }}</el-button>
         </div>
       </div>
     </div>
@@ -62,22 +86,11 @@ onMounted(() => {
     <Floor/>
 
     <!-- set dialog -->
-    <el-dialog v-model="setDialog" title="设置"  class="set-engine-show-dialog">
+    <!-- <el-dialog v-model="setDialog" title="设置"  class="set-engine-show-dialog">
       <template #footer>
-        <el-tabs
-          v-model="activeName"
-          type="card"
-          class="demo-tabs"
-          @tab-click="handleClick"
-        >
-          <!-- <el-tab-pane label="风格" name="first">风格</el-tab-pane> -->
-          <el-tab-pane label="搜索引擎" name="first"></el-tab-pane>
-          <!-- <el-tab-pane label="分类管理" name="second"></el-tab-pane> -->
-          <el-tab-pane label="全局设置" name="third">全局设置</el-tab-pane>
-          <el-tab-pane label="关于" name="fourth">关于</el-tab-pane>
-        </el-tabs>
+        <Setting/>
       </template>
-    </el-dialog>
+    </el-dialog> -->
 
   </div>
 </template>
@@ -89,4 +102,8 @@ onMounted(() => {
 :deep(.set-engine-show-dialog){
   @apply w-[800px] rounded-md h-[500px]
 }
+.el-button+.el-button{
+  @apply ml-0
+}
 </style>
+

@@ -14,7 +14,7 @@ onMounted(() => {
 
 <template>
   <div class="flex h-8 items-center flex-row-reverse">
-    <div class="mr-3 flex items-center">
+    <div class="mr-3 flex items-center text-white  pt-1 pb-1 pl-2 pr-2 rounded-md mt-6 bg-[rgba(0,0,0,0.6)]">
       <LanguageSwitch/>
     </div>
     <!-- <div class="mr-3">

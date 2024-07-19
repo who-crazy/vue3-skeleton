@@ -24,5 +24,5 @@
 </script>
 
 <style scoped>
-  .svg-icon{fill:currentColor; vertical-align: middle; width: 100%; height: 100%;}
+  .svg-icon{fill:currentColor; vertical-align: middle; width: 100%; height: 100%; outline: none;}
 </style>
