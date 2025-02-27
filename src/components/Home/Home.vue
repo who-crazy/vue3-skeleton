@@ -6,6 +6,8 @@ import Floor from '@/components/Layout/Floor/Floor.vue'
 // import SvgIcon from "@/components/Icons/SvgIcon.vue";
 // import Setting from "@/components/Setting/Setting.vue";
 import { useSearchStore } from '@/store/modules/search'
+import { useRouter } from 'vue-router';
+const router = useRouter(); 
 
 const searchStore = useSearchStore()
 
@@ -23,75 +25,170 @@ const search = () => {
 //   setDialog.value = !setDialog.value
 // }
 
+const goto = (path) => {
+  router.push(path)
+}
+
 const activeName = ref('搜索')
 const clickEngine = (item:any) => {
   searchStore.defaultEngine.logo =  item.logo
   searchStore.defaultEngine.title =  item.title
   searchStore.defaultEngine.link =  item.link
 }
+
+//选中标签
+const chooseTag = () => {
+
+}
+
+//duration
+const duration = ref('')
+const durationOptions = [
+  {
+    value: '<2min',
+    label: '<2min'
+  },
+  {
+    value: '2~12min',
+    label: '2~12min'
+  },
+  {
+    value: '12~40min',
+    label: '12~40min'
+  },
+  {
+    value: '40~90min',
+    label: '40~90min'
+  },
+  {
+    value: '>90min',
+    label: '>90min'
+  }
+]
+
+//sort
+const sort = ref('')
+const sortOptions = [
+  {
+    value: 'latest',
+    label: 'latest'
+  },
+  {
+    value: 'hot',
+    label: 'hot'
+  },
+  {
+    value: 'duration',
+    label: 'duration'
+  },
+]
+
+//score
+const score = ref(0)
+
+const imgUrl = ref("https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg");
+
 onMounted(() => {
   searchStore.searchEngineList()
 })
 </script>
 
 <template>
-  <div class="grid grid-rows-[8vh_40vh_44vh_8vh]">
-    <!-- header -->
-    <div class="">
-      <Header/>
-    </div>
-    <!-- content -->
-    <div class="flex justify-center flex-col">
-      <div class="flex justify-center">
-        <div class="font-bold text-6xl">
-          RanPage
+  <div class="grid grid-cols-[20%_80%]">
+    <!-- left -->
+    <div class="w-full border-r-2">
+      <!-- score -->
+      <div class="mt-5 mb-5 border-b-2 p-3">
+        <div class="mr-3">score: <el-rate v-model="score" clearable /></div>
+      </div>
+
+      <!-- tags -->
+      <div class="mb-3">
+        <div class="mb-3">cate1</div>
+        <div>
+          <el-check-tag :checked="false" type="primary" @change="chooseTag">Tag 1</el-check-tag>
         </div>
       </div>
-      <!-- seatch box -->
-      <div class="flex flex-col mt-10 items-center">
-        <div class="search-input pl-3">
-          <el-popover placement="bottom-start" width="600" popper-class="search-engine-choose mt-2 ml-[-12px]" trigger="click" :show-arrow="false" :hide-after="0">
-            <el-tabs v-model="activeName" class="demo-tabs">
-                <el-tab-pane :label="item.title" :name="item.title" v-for="(item, index) in searchStore.list" :key='index'>
-                  <div class="grid grid-cols-4 grid-auto-rows w-full ">
-                    <div class="pt-1 pb-1 pl-0 pr-2 hover:cursor-pointer rounded-sm"  v-for="(_item, _index) in item.list" :key="_index" @click="clickEngine(_item)">
-                      <div class="flex w-full items-center">
-                        <el-image  :src="_item.logo" fit="cover" class="w-4 h-4 mr-1"/>
-                        <el-text class="w-20 truncate">{{ _item.title }}</el-text>
-                      </div>
-                    </div>
-                  </div>
-                </el-tab-pane>
-              </el-tabs>
-              <!-- <el-button type="primary" class='mt-3 w-full' @click="setEngineShow">自定义</el-button> -->
 
-            <template #reference>
-                <!-- <SvgIcon name="baidu" style="width: 25px; height: 25px; cursor: pointer;"></SvgIcon> -->
-                <el-image :src="searchStore.defaultEngine.logo" style="width: 25px; height: 25px; cursor: pointer;"></el-image>
-            </template>
-          </el-popover>
-          
-          <input type="text" class="outline-none h-12 bg-[rgba(255,255,255,0)] w-[85%] ml-3 mr-3" v-model="keyword" @keyup.enter="search">
-          <!-- <el-icon size="large"><Search /></el-icon> -->
-          <Search class="w-6 h-6 cursor-pointer" @click="search"/>
-          <!-- <el-button type="primary" round size="">搜 索</el-button> -->
+      <div class="mb-3">
+        <div class="mb-3">cate1</div>
+        <div>
+          <el-check-tag :checked="false" type="primary" @change="chooseTag">Tag 1</el-check-tag>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <div class="mb-3">cate1</div>
+        <div>
+          <el-check-tag :checked="false" type="primary" @change="chooseTag">Tag 1</el-check-tag>
         </div>
       </div>
     </div>
-    <!-- box -->
-    <div>
-      
+
+    <!-- right -->
+    <div class="w-full">
+      <!-- search -->
+      <div class="border-b-2 p-3 flex">
+        <!-- duration -->
+        <div class="flex mr-3">
+          <div class="mr-2">duration:</div>
+          <el-select
+            v-model="duration"
+            clearable
+            placeholder="Duration"
+            style="width: 100px"
+          >
+            <el-option
+              v-for="item in durationOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </div>
+        <!-- sort -->
+        <div class="flex mr-2">
+          <div class="mr-2">sort:</div>
+          <el-select
+            v-model="sort"
+            clearable
+            placeholder="Sort"
+            style="width: 100px"
+          >
+            <el-option
+              v-for="item in sortOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </div>
+        <!-- play list -->
+        <el-button type="primary" class="mr-2">p-all</el-button>
+        <el-button type="primary" class="mr-2">random</el-button>
+      </div>
+      <!-- list -->
+      <div class="grid grid-cols-5">
+
+        <div class="w-[200px] p-1 mt-8" v-for="n in 9" @click="goto()">
+          <div>
+            <el-image :src="imgUrl" style="width: 200px; height: 120px;" fit="contain"/>
+          </div>
+          <div>
+            <div class="line-clamp-2">标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提标题提</div>
+            <div class="flex justify-between">
+              <div>S：1</div>
+              <div>D：360min</div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
+      <div class="mt-10 p-2">
+        <el-pagination background layout="prev, pager, next" :total="1000" />
+      </div>
     </div>
-    <!-- floor -->
-    <Floor/>
-
-    <!-- set dialog -->
-    <!-- <el-dialog v-model="setDialog" title="设置"  class="set-engine-show-dialog">
-      <template #footer>
-        <Setting/>
-      </template>
-    </el-dialog> -->
-
   </div>
 </template>
 

@@ -66,3 +66,7 @@ import SvgIcon from "@/components/Icons/SvgIcon.vue";
   <SvgIcon name="zh_en"></SvgIcon>
 </el-icon>
 ```
+
+# 补充
+
+播放器：https://codelife.cc/vue3-video-play/guide/install.html#props

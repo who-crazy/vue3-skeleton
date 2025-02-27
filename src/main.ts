@@ -18,6 +18,9 @@ import pinia from './store'
 import 'default-passive-events'
 //i18n
 import i18n from './language'
+//vue3-video-play
+// import vue3videoPlay from 'vue3-video-play' // 引入组件
+// import 'vue3-video-play/dist/style.css' // 引入css
 
 const app = createApp(App)
 //安装仓库
@@ -27,4 +30,5 @@ app.use(ElementPlus, {
   locale: zhCn
 })
 app.use(i18n)
+// app.use(vue3videoPlay)
 app.mount('#app')
